@@ -102,9 +102,6 @@ var uiModule = (function () {
 			el.parentNode.removeChild(el);
 		}
 
-
-
-
 	};
 
 
@@ -145,6 +142,10 @@ var globalControllerModule = (function (uiCtr, dtCtr) {
 
 			//2. Addin item to the UI from UI Controller
 			uiCtr.addHTMLElements(dtCtr.getLastItem());
+
+			//3. Clearing the input values
+			document.getElementById("top__input").value = "";
+			document.getElementById("top__input").focus();
 		}
 
 		else {
