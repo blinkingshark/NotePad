@@ -52,7 +52,24 @@ var dataModule = (function () {
 			} else {
 				data.items[recievedId].status = 1;
 			}
-		}
+		},
+
+		deleteItem: function (recievedId) {
+			var newIDs, indexr;
+			//New array containing ids of Real Data Array
+			newIDs = data.items.map(function (current) {
+				return current.id;
+			});
+			//Get the indexnumber of the relavent item
+			indexr = newIDs.indexOf(recievedId);
+			
+			//Delete the Item
+			if (indexr !== -1) {
+
+				data.items.splice(indexr, 1);
+			}
+		},
+
 	};
 
 
@@ -75,11 +92,17 @@ var uiModule = (function () {
 			var stringHTML, newHTML;
 
 			stringHTML = '<div><div id="content-%id%"> %topic% <input type="button" value="Done" class="done"><input type="button" value="Delete" class="delete"></div> </div>';
-			console.log(object.topic);
 			newHTML = stringHTML.replace('%id%', object.id);
 			newHTML = newHTML.replace('%topic%', object.topic);
 			document.querySelector('.content').insertAdjacentHTML('beforeend', newHTML);
 		},
+		deleteElement: function(elementID){
+			var el;
+			el = document.getElementById(elementID)
+			el.parentNode.removeChild(el);
+		}
+
+
 
 
 	};
@@ -104,9 +127,11 @@ var globalControllerModule = (function (uiCtr, dtCtr) {
 
 		//Strike button Event Listener
 		document.querySelector(".content").addEventListener('click', strikeObject);
+		//Delete Button Event Listener
+		document.querySelector(".content").addEventListener('click', deleteObject);
 	};
 
-	//Add Item Function
+	//Add Item
 	var addingItems = function () {
 		console.log("Adding Item Function is Working");
 
@@ -146,6 +171,21 @@ var globalControllerModule = (function (uiCtr, dtCtr) {
 			splitId = elementID.split('-');
 			trueId = splitId[1];
 			dtCtr.markItem(trueId);
+		}
+
+	};
+	//Delete It
+	var deleteObject = function (event) {
+		var elementID, splitId, trueId;
+		//Checking the button is Done/Undone Button
+		if (event.target.classList.contains("delete")) {
+			elementID = event.target.parentNode.id; //Eg. "content__2"
+			splitId = elementID.split('-');
+			trueId = parseInt(splitId[1]);
+			dtCtr.deleteItem(trueId);
+
+			//Delete From UI
+			uiCtr.deleteElement(elementID);
 		}
 
 	};
